@@ -1,0 +1,68 @@
+.containerCenter {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.containerLogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+        margin-left: .3rem;
+        display: flex;
+        align-items: center;
+        color: var(--white);
+
+        span{
+            background: rgb(255,192,2);
+            background: linear-gradient(90deg, rgba(255,192,2,1) 35%, rgba(255,0,114,1) 100%);
+            background-clip: text;
+            color: transparent;
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -moz-text-fill-color: transparent;
+            font-weight: 800;
+        }
+    }
+}
+
+.login {
+    margin-top: 2rem;
+    width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1rem 1.3rem;
+
+    form {
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+
+        button {
+            height: 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    }
+}
+
+.text {
+    margin: 1rem 0;
+    color: var(--white);
+    font-weight: 300;
+    font-style: italic;
+    cursor: pointer;
+}
+
+@media (max-width: 620px) {
+    .login {
+        width: 90%;
+    }
+}

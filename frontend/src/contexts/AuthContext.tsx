@@ -1,11 +1,14 @@
 import { createContext, ReactNode, useState } from "react";
-import { destroyCookie } from "nookies";
+import { destroyCookie, setCookie, parseCookies } from "nookies";
 import Router from "next/router";
+
+import { api } from "../services/apiClient";
 
 type AuthContextData = {
     user: UserProps;
     isAuthenticated: boolean;
     signIn: (credentials: SignInProps) => Promise<void>;
+    signUp: (credentials: SignUpProps) => Promise<void>;
     signOut: () => void;
 }
 
@@ -16,6 +19,12 @@ type UserProps = {
 }
 
 type SignInProps = {
+    email: string;
+    password: string;
+}
+
+type SignUpProps = {
+    name: string;
     email: string;
     password: string;
 }
@@ -41,12 +50,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const isAuthenticated = !!user;
 
     async function signIn({ email, password }: SignInProps) {
-        console.log(email);
-        console.log(password);
+        try {
+            const response = await api.post("/session", {
+                email,
+                password
+            });
+
+            const { id, name, token } = response.data;
+
+            setCookie(undefined, "@nextauth.token", token, {
+                maxAge: 60 * 60 * 24 * 30, // Expirar em 1 mês
+                path: "/" // Todos os caminhos terão acesso ao cookie
+            });
+
+            setUser({
+                id,
+                name,
+                email,
+            });
+
+            // Passar o token para as próximas requisições
+            api.defaults.headers["Authorization"] = `Bearer ${token}`;
+
+            // Redirecionar o usuário para o DASHBOARD
+            Router.push("/dashboard");
+
+        }catch(err) {
+            console.log("ERRO AO ACESSAR: ", err);
+        }
+    }
+
+    async function signUp({ name, email, password }: SignUpProps) {
+        try {
+
+            const response = await api.post("/users", {
+                name,
+                email,
+                password
+            });
+
+            console.log("CADASTRADO COM SUCESSO!");
+
+            Router.push("/");
+
+        } catch(err) {
+            console.log("ERRO AO CADASTRAR USUÁRIO: ", err);
+        }
     }
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+        <AuthContext.Provider value={{ user, isAuthenticated, signIn, signUp, signOut }}>
             {children}
         </AuthContext.Provider>
     );

@@ -1,3 +1,4 @@
+import { FormEvent, useState, useContext } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { MdFastfood } from "react-icons/md";
@@ -5,9 +6,41 @@ import { MdFastfood } from "react-icons/md";
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 
+import { AuthContext } from "../../contexts/AuthContext";
+
 import styles from "../../../styles/home.module.scss";
 
 export default function SignUp() {
+
+  const { signUp } = useContext(AuthContext);
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading]= useState(false);
+
+  async function handleSignUp(event: FormEvent) {
+    event.preventDefault();
+
+    if(name === "" || email === "" || password === "") {
+      alert("Preencha todos os campos!");
+      return;
+    }
+
+    setLoading(true);
+
+    let data = {
+      name,
+      email,
+      password
+    };
+
+    await signUp(data);
+
+    setLoading(false);
+  }
+
   return(
     <>
       <Head>
@@ -34,25 +67,31 @@ export default function SignUp() {
 
         <div className={styles.login}>
             <h2>Criando sua conta</h2>
-          <form>
+          <form onSubmit={handleSignUp}>
             <Input 
               type="text"
               placeholder="Digite seu nome..."
+              value={name}
+              onChange={ (e) => setName(e.target.value) }
             />
 
             <Input 
               type="email"
               placeholder="Digite seu e-mail..."
+              value={email}
+              onChange={ (e) => setEmail(e.target.value) }
             />
 
             <Input 
               type="password"
               placeholder="Digite sua senha..."
+              value={password}
+              onChange={ (e) => setPassword(e.target.value) }
             />
 
             <Button
               type="submit"
-              loading={false}
+              loading={loading}
             >
               Cadastrar
             </Button>

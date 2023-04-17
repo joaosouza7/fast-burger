@@ -1,4 +1,4 @@
-import { useContext, FormEvent } from "react";
+import { useContext, useState, FormEvent } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { MdFastfood } from "react-icons/md";
@@ -14,12 +14,17 @@ export default function Home() {
 
   const { signIn } = useContext(AuthContext);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [loading, setLoading]= useState(false);
+
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
     let data = {
-      email: "teste@teste.com",
-      password: "123123"
+      email,
+      password
     };
 
     await signIn(data);
@@ -54,16 +59,20 @@ export default function Home() {
             <Input 
               type="email"
               placeholder="Digite seu e-mail..."
+              value={email}
+              onChange={ (e) => setEmail(e.target.value) }
             />
 
             <Input 
               type="password"
               placeholder="Digite sua senha..."
+              value={password}
+              onChange={ (e) => setPassword(e.target.value) }
             />
 
             <Button
               type="submit"
-              loading={false}
+              loading={loading}
             >
               Acessar
             </Button>

@@ -1,3 +1,4 @@
+import { useContext, FormEvent } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { MdFastfood } from "react-icons/md";
@@ -5,9 +6,25 @@ import { MdFastfood } from "react-icons/md";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
 
+import { AuthContext } from "../contexts/AuthContext";
+
 import styles from "../../styles/home.module.scss";
 
 export default function Home() {
+
+  const { signIn } = useContext(AuthContext);
+
+  async function handleLogin(event: FormEvent) {
+    event.preventDefault();
+
+    let data = {
+      email: "teste@teste.com",
+      password: "123123"
+    };
+
+    await signIn(data);
+  }
+
   return(
     <>
       <Head>
@@ -20,7 +37,6 @@ export default function Home() {
           <linearGradient id="yellow-gradient" x1="100%" y1="100%" x2="0%" y2="0%">
             <stop stopColor="#ffc002" offset="0%" />
             <stop stopColor="#ff0072" offset="100%" />
-            /**#ff0072  */
           </linearGradient>
         </svg>
 
@@ -34,7 +50,7 @@ export default function Home() {
         </div>
 
         <div className={styles.login}>
-          <form>
+          <form onSubmit={handleLogin}>
             <Input 
               type="email"
               placeholder="Digite seu e-mail..."

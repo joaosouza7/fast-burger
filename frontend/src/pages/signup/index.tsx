@@ -11,7 +11,7 @@ export default function SignUp() {
   return(
     <>
       <Head>
-        <title>FastBurger</title>
+        <title>Cadastre-se</title>
       </Head>
 
       <div className={styles.containerCenter}>
@@ -20,7 +20,6 @@ export default function SignUp() {
           <linearGradient id="yellow-gradient" x1="100%" y1="100%" x2="0%" y2="0%">
             <stop stopColor="#ffc002" offset="0%" />
             <stop stopColor="#ff0072" offset="100%" />
-            /**#ff0072  */
           </linearGradient>
         </svg>
 
@@ -34,6 +33,7 @@ export default function SignUp() {
         </div>
 
         <div className={styles.login}>
+            <h2>Criando sua conta</h2>
           <form>
             <Input 
               type="text"
@@ -59,7 +59,7 @@ export default function SignUp() {
           </form>
 
           <Link href="/" legacyBehavior>
-            <a className={styles.text}>Não possui uma conta? Registre-se</a>
+            <a className={styles.text}>Já possui uma conta? Faça login!</a>
           </Link>
         </div>
         

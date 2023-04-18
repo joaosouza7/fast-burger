@@ -1,0 +1,39 @@
+.container {
+    max-width: 720px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    h1 {
+        color: var(--white);
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0;
+
+    .input {
+        background-color: var(--dark-700);
+        border: 1px solid #3f3f3f;
+        border-radius: .2rem;
+        height: 40px;
+        padding: 1rem;
+        color: var(--white);
+        margin-bottom: 1rem;
+    }
+
+    .buttonAdd {
+        border: 0;
+        border-radius: .2rem;
+        height: 40px;
+        background-color: var(--green-900);
+        color: var(--dark-700);
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+}

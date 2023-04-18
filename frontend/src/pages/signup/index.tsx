@@ -1,12 +1,15 @@
 import { FormEvent, useState, useContext } from "react";
+import { toast } from "react-toastify";
+import { MdFastfood } from "react-icons/md";
+
 import Head from "next/head";
 import Link from "next/link";
-import { MdFastfood } from "react-icons/md";
 
 import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 
 import { AuthContext } from "../../contexts/AuthContext";
+import { canSSRGuest } from "../../utils/canSSRGuest";
 
 import styles from "../../../styles/home.module.scss";
 
@@ -24,7 +27,7 @@ export default function SignUp() {
     event.preventDefault();
 
     if(name === "" || email === "" || password === "") {
-      alert("Preencha todos os campos!");
+      toast.warning("Preencha todos os campos!");
       return;
     }
 
@@ -106,3 +109,11 @@ export default function SignUp() {
     </>
   );
 }
+
+export const getServerSideProps = canSSRGuest(async (ctx) => {
+
+  return {
+    props: {}
+  }
+
+});

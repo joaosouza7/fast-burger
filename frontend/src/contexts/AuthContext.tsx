@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useState, useEffect } from "react";
 import { destroyCookie, setCookie, parseCookies } from "nookies";
+import { toast } from "react-toastify";
 import Router from "next/router";
 
 import { api } from "../services/apiClient";
@@ -49,6 +50,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<UserProps>();
     const isAuthenticated = !!user;
 
+    useEffect(() => {
+
+        // Tentar buscar cookie (token)
+        const { "@nextauth.token": token } = parseCookies();
+
+        if(token) {
+            api.get("/me")
+                .then(response => {
+                    const { id, name, email } = response.data;
+                    
+                    setUser({
+                        id,
+                        name,
+                        email,
+                    });
+                })
+                .catch((err) => {
+                    // Deslogar usuário
+                    signOut();
+                });
+        }
+
+    }, [])
+
     async function signIn({ email, password }: SignInProps) {
         try {
             const response = await api.post("/session", {
@@ -72,10 +97,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
             // Passar o token para as próximas requisições
             api.defaults.headers["Authorization"] = `Bearer ${token}`;
 
+            toast.success(`Bem-vindo(a) ao FastBurger ${name}`);
+
             // Redirecionar o usuário para o DASHBOARD
             Router.push("/dashboard");
 
         }catch(err) {
+            toast.error("Erro ao fazer login!");
             console.log("ERRO AO ACESSAR: ", err);
         }
     }
@@ -89,11 +117,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
                 password
             });
 
-            console.log("CADASTRADO COM SUCESSO!");
+            toast.success("Conta criada com sucesso!");
 
             Router.push("/");
 
         } catch(err) {
+            toast.error("Erro ao criar conta!");
             console.log("ERRO AO CADASTRAR USUÁRIO: ", err);
         }
     }

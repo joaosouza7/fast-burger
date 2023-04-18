@@ -4,6 +4,7 @@ import Head from "next/head";
 
 import { Header } from "../../components/Header";
 import { setupAPIClient } from "../../services/api";
+import { canSSRAuth } from "../../utils/canSSRAuth";
 
 import styles from "./styles.module.scss";
 
@@ -59,3 +60,11 @@ export default function Category() {
         </>
     );
 }
+
+export const getServerSideProps = canSSRAuth(async (ctx) => {
+
+    return {
+        props: {}
+    }
+
+});

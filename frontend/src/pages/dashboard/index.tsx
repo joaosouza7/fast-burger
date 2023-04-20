@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Head from "next/head";
 import { FiRefreshCcw } from "react-icons/fi";
+import Modal from "react-modal";
 
 import { Header } from "../../components/Header";
+import { ModalOrder } from "../../components/ModalOrder";
 
 import { canSSRAuth } from "../../utils/canSSRAuth";
 import { setupAPIClient } from "../../services/api";
@@ -21,13 +23,53 @@ interface HomeProps {
     orders: OrderProps[];
 }
 
+export type OrderItemProps = {
+    id: string;
+    amount: number;
+    order_id: string;
+    product_id: string;
+    product:{
+        id: string;
+        name: string;
+        price: string;
+        description: string;
+        banner: string;
+    },
+    order:{
+        id: string;
+        table: string | number;
+        status: boolean;
+        draft: boolean;
+        name: string | null;
+    }
+}
+
 export default function Dashboard({ orders }: HomeProps) {
 
     const [orderList, setOrderList] = useState(orders || []);
 
-    function handleOpenModalView(id: string) {
-        alert("ID: " + id);
+    const [modalItem, setModalItem] = useState<OrderItemProps[]>();
+    const [modalVisible, setModalVisible] = useState(false);
+
+    function handleCloseModal() {
+        setModalVisible(false);
     }
+
+    async function handleOpenModalView(id: string) {
+        
+        const apiClient = setupAPIClient();
+
+        const response = await apiClient.get("/order/detail", {
+            params: {
+                order_id: id,
+            }
+        });
+
+        setModalItem(response.data);
+        setModalVisible(true);
+    }
+
+    Modal.setAppElement("#__next")
 
     return (
         <>
@@ -60,6 +102,14 @@ export default function Dashboard({ orders }: HomeProps) {
                     </article>
 
                 </main>
+
+                {modalVisible && (
+                    <ModalOrder 
+                        isOpen={modalVisible}
+                        onRequestClose={handleCloseModal}
+                        order={modalItem}
+                    />
+                )}
             </div>
         </>
     );

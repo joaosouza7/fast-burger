@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 
+import { AuthContext } from "../../contexts";
+
 export default function SignIn() {
+
+    const { signIn } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function handleLogin() {
+    async function handleLogin() {
         
         if(email === "" || password === "") {
             return;
         }
+
+        await signIn({ email, password });
         
     }
 

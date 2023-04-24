@@ -3,6 +3,8 @@ import { Text, SafeAreaView, TouchableOpacity, TextInput, StyleSheet } from "rea
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
+import { api } from "../../services/api";
+
 import { StackParamsList  } from "../../routes/app.routes";
 
 export default function Dashboard() {
@@ -17,7 +19,13 @@ export default function Dashboard() {
             return;
         }
 
-        navigation.navigate("Order", { number: number, order_id: "" });
+        const response = await api.post("/order", {
+            table: Number(number)
+        });
+
+        navigation.navigate("Order", { number: number, order_id: response.data.id });
+
+        setNumber("");
     }
 
     return (
